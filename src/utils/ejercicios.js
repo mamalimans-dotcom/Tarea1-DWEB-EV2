@@ -47,7 +47,7 @@ export function duracion(inicio, fin) {
   inicio = Number(inicio);
   fin = Number(fin);
   // TODO: resta inicio a fin.
-  return undefined;
+  return inicio - fin;
 }
 
 // 2. Devuelve un booleano: ambos enteros y 0 <= inicio < fin <= 1440.
@@ -56,7 +56,10 @@ export function horarioValido(inicio, fin) {
   inicio = Number(inicio);
   fin = Number(fin);
   // TODO: combina Number.isInteger y comparaciones con &&.
-  return undefined;
+  if (Number.isInteger(inicio) && Number.isInteger(fin) && inicio >= 0 && inicio < fin && fin <= 1440){
+    return true;
+  }
+  return false;
 }
 
 // 3. Recibe un array de géneros y el texto buscado. Cuenta coincidencias exactas.
@@ -64,7 +67,13 @@ export function horarioValido(inicio, fin) {
 // contarPorGenero([], 'indie') → 0. Debe funcionar con cualquier longitud.
 export function contarPorGenero(generos, buscado) {
   // TODO: empieza un contador en 0, recorre generos con for y compara cada valor.
-  return undefined;
+  let contador = 0;
+  for (const genero of generos){
+    if (genero === buscado){
+      contador ++;
+    }
+  }
+  return contador;
 }
 
 // 4. Recibe un array de duraciones no negativas, en minutos, como textos.
@@ -73,7 +82,11 @@ export function contarPorGenero(generos, buscado) {
 export function minutosTotales(duraciones) {
   // TODO: empieza un acumulador en 0 y recorre duraciones con for.
   // Convierte cada valor con Number(duraciones[i]) antes de sumarlo.
-  return undefined;
+  let contador = 0;
+  for(let i = 0; i < duraciones.length; i++){
+    contador += Number(duraciones[i])
+  }
+  return contador;
 }
 
 // 5. Dos textos: nombre de artista y consulta.
@@ -81,49 +94,97 @@ export function minutosTotales(duraciones) {
 // coincideTexto('Bruma Solar', ' BRUMA ') → true.
 export function coincideTexto(artista, texto) {
   // TODO: usa trim(), toLowerCase() e includes(). Devuelve un booleano.
-  return undefined;
+  const entradaTexto = texto.trim().toLocaleLowerCase()
+  if (artista.toLocaleLowerCase().includes(entradaTexto)){
+    return true;
+  }
+  return false;
 }
 
 // 6. Dos códigos de escenario. Devuelve un booleano.
 // coincideEscenario('rio', 'rio') → true; ('rio', 'bosque') → false.
 export function coincideEscenario(escenario, buscado) {
   // TODO: compara los parámetros con igualdad estricta (===).
-  return undefined;
+  return escenario === buscado;
 }
 
 // 7. Convertir minutos a hora.
 // Convierte minutos enteros entre 0 y 1440 al formato HH:MM. Casos: 635 → 10:35; 0 → 00:00; 1440 → 24:00. Para valores inválidos devuelve 'Dato no válido'.
 export function hora(minutos) {
   // TODO: Usa Number, Number.isInteger, Math.floor, el resto (%) y padStart.
-  return undefined;
+
+  minutos = Number(minutos);
+
+  const hora = String(Math.floor(minutos / 60)).padStart(2, '0');
+  const minuto = String(minutos % 60).padStart(2, '0');
+  return `${hora}:${minuto}`;
 }
 
 // 8. Aplicar un descuento.
 // Devuelve el precio final como número con un máximo de dos decimales. Precio no negativo y porcentaje entre 0 y 100, ambos finitos. Rechaza campos vacíos. Casos: 20 y 15 → 17; 19.99 y 10 → 17.99; -1 o 120 % → 'Dato no válido'.
 export function aplicarDescuento(precio, porcentaje) {
   // TODO: Valida antes de operar. toFixed devuelve texto; convierte de nuevo con Number.
-  return undefined;
+  if (precio === null || porcentaje === null){
+      return 'El dato no es válido'
+  }
+
+  precio = Number(precio);
+  porcentaje = Number(porcentaje);
+
+  if (!Number.isFinite(precio) || !Number.isFinite(porcentaje) || precio < 0 || 0 > porcentaje > 100){
+    return 'Datos no validos'
+  }
+
+  const descuentos = precio * (1 - porcentaje / 100);
+  return Number(descuentos.toFixed(2));
 }
 
 // 9. Encontrar la mayor duración.
 // Devuelve la mayor duración numérica sin modificar el array. Casos: 45;90;60 → 90; 60;60 → 60; lista vacía → null. Los elementos serán duraciones válidas no negativas.
 export function mayorDuracion(duraciones) {
   // TODO: Recorre el array y conserva el máximo. Convierte cada elemento con Number.
-  return undefined;
+  if (duraciones.length === 0){
+    return 0;
+  }
+
+  let maximo = Number(duraciones[0]);
+
+  for (let i = 0; i < duraciones.length; i++) {
+    maximo = Math.max(maximo, Number(duraciones[i]));
+  }
+  return maximo;
 }
 
 // 10. Eliminar géneros repetidos.
 // Devuelve un array nuevo sin duplicados y conserva el orden. Quita espacios exteriores, pero distingue mayúsculas. Casos: indie;rock;indie → [indie, rock]; lista vacía → [].
 export function generosUnicos(generos) {
   // TODO: Usa un array acumulador, trim e includes antes de añadir cada género.
-  return undefined;
+
+  const arrayNuevo = [];
+
+  for (let i = 0; i < generos.length ; i++) {
+      const sinEspacio = generos[i].trim();
+
+      if (!arrayNuevo.includes(sinEspacio)){
+        arrayNuevo.push(sinEspacio);
+      }
+  }
+  return arrayNuevo;
 }
 
 // 11. Buscar artistas.
-// Devuelve un array nuevo de nombres que contienen la consulta, ignorando mayúsculas y espacios exteriores de esta. Conserva los nombres originales. Una consulta vacía devuelve todos; 'zzz' devuelve [].
+// Devuelve un array nuevo de nombres que contienen la consulta,
+// ignorando mayúsculas y espacios exteriores de esta. Conserva los nombres originales.
+// Una consulta vacía devuelve todos; 'zzz' devuelve [].
 export function buscarArtistas(artistas, texto) {
   // TODO: Usa filter con una función con nombre, toLowerCase e includes. No uses flechas.
-  return undefined;
+  const consulta = texto.trim().toLowerCase();
+
+  function incluye(artista){
+    return artista.toLowerCase().includes(consulta);
+  }
+
+  return artistas.filter(incluye);
 }
 
 // 12. Convertir duraciones a horas.
